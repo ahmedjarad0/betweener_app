@@ -1,6 +1,6 @@
 # betweener_app
 
-A new Flutter project.
+Fast Way to sharing Social Media Accounts.
 
 ## Getting Started
 
