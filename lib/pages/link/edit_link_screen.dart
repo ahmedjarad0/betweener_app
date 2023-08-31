@@ -40,7 +40,7 @@ class _EditLinkScreenState extends State<EditLinkScreen> with Helper {
      'link': _linkCtl.text,
    };
       if(_keyForm.currentState!.validate()){
-    ApiResponse apiResponse = await  LinksApiController().editLinks(id: id, body: body);
+    ApiHelper apiResponse = await  LinksApiController().editLinks(id: id, body: body);
       if(apiResponse.success&&mounted){
         Navigator.pop(context);
       }

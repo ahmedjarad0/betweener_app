@@ -121,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen> with Helper {
                                     ? true
                                     : false,
                                 followFunction: () async {
-                                  ApiResponse apiResponse =
+                                  ApiHelper apiResponse =
                                       await FollowApiController().addFollow({
                                     'followee_id':
                                         listOfUser[index].id.toString()

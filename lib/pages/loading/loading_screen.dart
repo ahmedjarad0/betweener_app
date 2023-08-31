@@ -1,4 +1,4 @@
-import 'package:betweener_app/controllers/pref/shared_pref.dart';
+import 'package:betweener_app/core/helper/shared_pref.dart';
 import 'package:betweener_app/pages/main/main_app_screen.dart';
 import 'package:betweener_app/pages/auth/login_screen.dart';
 import 'package:flutter/material.dart';

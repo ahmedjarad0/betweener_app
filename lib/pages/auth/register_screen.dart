@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Helper {
       'password_confirmation': _rePasswordCtl.text
     };
     if (_formKey.currentState!.validate()) {
-      ApiResponse apiResponse = await AuthApiController().register(body);
+      ApiHelper apiResponse = await AuthApiController().register(body);
       if (apiResponse.success && mounted) {
         Navigator.pushReplacementNamed(context, LoadingScreen.id);
       }

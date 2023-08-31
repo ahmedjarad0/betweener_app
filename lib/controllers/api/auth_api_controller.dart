@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:betweener_app/controllers/pref/shared_pref.dart';
+import 'package:betweener_app/core/helper/shared_pref.dart';
 import 'package:betweener_app/models/api_response.dart';
 import 'package:betweener_app/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../core/util/constants.dart';
 
 class AuthApiController {
-  Future<ApiResponse> login(String email, String password) async {
+  Future<ApiHelper> login(String email, String password) async {
     Uri uri = Uri.parse(loginUrl);
     var response = await http.post(uri, body: {
       'email': email,
@@ -17,12 +17,12 @@ class AuthApiController {
       var jsonResponse = jsonDecode(response.body);
       UserAuth userAuth = UserAuth.fromJson(jsonResponse);
       SharedPerfController().save(userAuth);
-      return ApiResponse('Login Successfully ', true);
+      return ApiHelper('Login Successfully ', true);
     }
-    return ApiResponse('Something went error ,try again ', false);
+    return ApiHelper('Something went error ,try again ', false);
   }
 
-  Future<ApiResponse> register(Map<String, String> body) async {
+  Future<ApiHelper> register(Map<String, String> body) async {
     Uri uri = Uri.parse(registerUrl);
     var response = await http.post(uri, body: body);
     // print(response.body);
@@ -32,8 +32,8 @@ class AuthApiController {
       UserAuth userAuth = UserAuth.fromJson(jsonResponse);
       SharedPerfController().save(userAuth);
 
-      return ApiResponse('Register Successfully ', true);
+      return ApiHelper('Register Successfully ', true);
     }
-    return ApiResponse('Something went error ,try again ', false);
+    return ApiHelper('Something went error ,try again ', false);
   }
 }

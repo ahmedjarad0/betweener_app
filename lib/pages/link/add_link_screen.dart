@@ -1,3 +1,4 @@
+import 'package:betweener_app/controllers/api/links_api_controller.dart';
 import 'package:betweener_app/models/api_response.dart';
 import 'package:betweener_app/pages/widgets/custom_text_form_field.dart';
 import 'package:betweener_app/pages/widgets/secondary_button_widget.dart';
@@ -42,7 +43,7 @@ class _AddLinkScreenState extends State<AddLinkScreen> with Helper {
    };
       if(_keyForm.currentState!.validate()){
 
-    ApiResponse apiResponse = await  Provider.of<LinkProvider>(context,listen: false).addLinks(body);
+    ApiHelper apiResponse = await  LinksApiController().addLinks(body);
       if(apiResponse.success&&mounted){
         Navigator.pop(context);
       }

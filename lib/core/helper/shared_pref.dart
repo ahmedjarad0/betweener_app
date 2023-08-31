@@ -23,8 +23,8 @@ class SharedPerfController {
   }
 
 
-    Future<void> save(UserAuth userAuth) async {
-      await _sharedPreferences.setString(
+    Future<bool> save(UserAuth userAuth) async {
+    return  await _sharedPreferences.setString(
           PerfKeys.user.name, userAuthToJson(userAuth));
     }
     Future<bool> clean() async {

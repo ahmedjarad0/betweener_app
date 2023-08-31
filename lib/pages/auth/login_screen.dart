@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> with Helper {
 
   void login() async {
     if (_formKey.currentState!.validate()) {
-      ApiResponse apiResponse =
+      ApiHelper apiResponse =
           await AuthApiController().login(_emailCtl.text, _passwordCtl.text);
       if (apiResponse.success) {
         Navigator.pushReplacementNamed(context, LoadingScreen.id);

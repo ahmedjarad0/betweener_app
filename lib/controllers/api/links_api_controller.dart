@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:betweener_app/controllers/pref/shared_pref.dart';
+import 'package:betweener_app/core/helper/shared_pref.dart';
 import 'package:betweener_app/models/api_response.dart';
 import 'package:betweener_app/models/links.dart';
 import 'package:betweener_app/models/user.dart';
@@ -27,7 +27,7 @@ class LinksApiController {
     return [];
   }
 
-  Future<ApiResponse> addLinks(Map<String, dynamic> body) async {
+  Future<ApiHelper> addLinks(Map<String, dynamic> body) async {
     UserAuth userAuth = userAuthFromJson(SharedPerfController().userAuth);
     Uri uri = Uri.parse(linksUrl.replaceFirst('/{id}', ''));
     var response = await http.post(uri, body: body, headers: {
@@ -37,12 +37,12 @@ class LinksApiController {
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       Links links = Links.fromJson(jsonResponse['link']);
-      return ApiResponse('Added Successfully', true);
+      return ApiHelper('Added Successfully', true);
     }
-    return ApiResponse('Something went error', false);
+    return ApiHelper('Something went error', false);
   }
 
-  Future<ApiResponse> editLinks(
+  Future<ApiHelper> editLinks(
       {required String id, required Map<String, dynamic> body}) async {
     UserAuth userAuth = userAuthFromJson(SharedPerfController().userAuth);
     Uri uri = Uri.parse(linksUrl.replaceFirst('{id}', id.toString()));
@@ -52,12 +52,12 @@ class LinksApiController {
     print(response.body);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      return ApiResponse(jsonResponse['message'], true);
+      return ApiHelper(jsonResponse['message'], true);
     }
-    return ApiResponse('Something went error !', false);
+    return ApiHelper('Something went error !', false);
   }
 
-  Future<ApiResponse> deleteLinks({required String id}) async {
+  Future<ApiHelper> deleteLinks({required String id}) async {
     UserAuth userAuth = userAuthFromJson(SharedPerfController().userAuth);
     Uri uri = Uri.parse(linksUrl.replaceFirst('{id}', id.toString()));
     var response = await http.delete(uri, headers: {
@@ -67,8 +67,8 @@ class LinksApiController {
     print(response.body);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      return ApiResponse(jsonResponse['message'], true);
+      return ApiHelper(jsonResponse['message'], true);
     }
-    return ApiResponse('Something went error', false);
+    return ApiHelper('Something went error', false);
   }
 }

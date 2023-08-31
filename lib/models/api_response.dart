@@ -1,5 +1,5 @@
-class ApiResponse {
+class ApiHelper {
   final String message;
   final bool success ;
-  ApiResponse(this.message, this.success);
+  ApiHelper(this.message, this.success);
 }

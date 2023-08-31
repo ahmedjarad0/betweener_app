@@ -7,7 +7,7 @@ import 'package:betweener_app/models/follow.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/user.dart';
-import '../pref/shared_pref.dart';
+import '../../core/helper/shared_pref.dart';
 
 class FollowApiController {
   Future<Follow> getFollow() async {
@@ -25,7 +25,7 @@ class FollowApiController {
     return Future.error('Something error');
   }
 
-  Future<ApiResponse> addFollow(Map<String, dynamic> body) async {
+  Future<ApiHelper> addFollow(Map<String, dynamic> body) async {
     UserAuth userAuth = userAuthFromJson(SharedPerfController().userAuth);
 
     Uri uri = Uri.parse(followUrl);
@@ -35,8 +35,8 @@ class FollowApiController {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
-      return ApiResponse('Operation Successfully', true);
+      return ApiHelper('Operation Successfully', true);
     }
-    return ApiResponse('Something error', false);
+    return ApiHelper('Something error', false);
   }
 }

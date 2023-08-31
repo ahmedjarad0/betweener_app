@@ -1,13 +1,13 @@
-import 'package:betweener_app/controllers/api/links_api_controller.dart';
 import 'package:betweener_app/controllers/api/user_controller.dart';
+import 'package:betweener_app/core/helper/api_response.dart';
 import 'package:betweener_app/core/util/constants.dart';
-import 'package:betweener_app/pages/link/add_link_screen.dart';
 import 'package:betweener_app/provider/link_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../models/links.dart';
+import '../../controllers/api/links_api_controller.dart';
 import '../../models/user.dart';
+import '../link/add_link_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = '/home_screen';
@@ -23,9 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    Future.delayed(Duration.zero,() {
       Provider.of<LinkProvider>(context, listen: false).fetchLink(context);
-    });
+
+    },);
+
   }
 
   @override
@@ -59,34 +61,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 qrImage,
                 width: 250,
                 height: 341.58,
-
               ),
             ),
-            const Divider(indent: 50,endIndent: 50,height: 1,thickness: 2,color: Colors.black,),
-            const SizedBox(height: 10,),
-            FutureBuilder<List<Links>>(
-              future: LinksApiController().getLinks(context),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+            const Divider(
+              indent: 50,
+              endIndent: 50,
+              height: 1,
+              thickness: 2,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Consumer<LinkProvider>(
+              builder: (_, linkProvider, __) {
+                if (linkProvider.links.status == Status.LOADING) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (snapshot.hasData) {
+                }  if (linkProvider.links.status == Status.COMPLETED) {
                   return SizedBox(
                     height: 100,
                     child: ListView.separated(
                         padding: const EdgeInsets.all(12),
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          if (index == snapshot.data!.length) {
+                          if (index == linkProvider.links.data!.length) {
                             return GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(context, AddLinkScreen.id)
                                       .then((_) {
-                                    final link =
-                                        LinksApiController().getLinks(context);
                                     setState(() {
-                                      link;
+                                      linkProvider.fetchLink(context);
                                     });
                                   });
                                 },
@@ -112,9 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ])));
-                          }
-
-                          if (index < snapshot.data!.length) {
+                          }  if (index < linkProvider.links.data!.length) {
                             return Container(
                               width: 110,
                               padding: const EdgeInsets.all(12),
@@ -125,14 +129,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    snapshot.data![index].title!,
+                                    ' ${linkProvider.links.data?[index].title}',
                                     style: GoogleFonts.roboto(
                                         color: kOnSecondaryColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16),
                                   ),
                                   Text(
-                                    snapshot.data![index].link!,textAlign: TextAlign.center,
+                                    linkProvider.links.data![index].link!,
+                                    textAlign: TextAlign.center,
                                     style: GoogleFonts.roboto(
                                         color: kOnSecondaryColor,
                                         fontWeight: FontWeight.w300,
@@ -148,7 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 12,
                           );
                         },
-                        itemCount: snapshot.data!.length + 1),
+                        itemCount: linkProvider.links.data!.length + 1),
+                  );
+                }  if (linkProvider.links.status == Status.ERROR) {
+                  return Center(
+                    child: Text('${linkProvider.links.message}'),
                   );
                 } else {
                   return const Center(
@@ -157,7 +166,99 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
-            const Spacer(),
+            // FutureBuilder<List<Links>>(
+            //   future: LinksApiController().getLinks(context),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return const Center(
+            //         child: CircularProgressIndicator(),
+            //       );
+            //     } else if (snapshot.hasData) {
+            //       return SizedBox(
+            //         height: 100,
+            //         child: ListView.separated(
+            //             padding: const EdgeInsets.all(12),
+            //             scrollDirection: Axis.horizontal,
+            //             itemBuilder: (context, index) {
+            //               if (index == snapshot.data!.length) {
+            //                 return GestureDetector(
+            //                     onTap: () {
+            //                       Navigator.pushNamed(context, AddLinkScreen.id)
+            //                           .then((_) {
+            //                         final link =
+            //                             LinksApiController().getLinks(context);
+            //                         setState(() {
+            //                           link;
+            //                         });
+            //                       });
+            //                     },
+            //                     child: Container(
+            //                         padding: const EdgeInsets.all(12),
+            //                         decoration: BoxDecoration(
+            //                             color: const Color(0xffE7E5F1),
+            //                             borderRadius:
+            //                                 BorderRadius.circular(12)),
+            //                         child: Column(children: [
+            //                           Text(
+            //                             '+',
+            //                             style: GoogleFonts.roboto(
+            //                                 color: kPrimaryColor,
+            //                                 fontSize: 20,
+            //                                 fontWeight: FontWeight.bold),
+            //                           ),
+            //                           Text(
+            //                             'Add More',
+            //                             style: GoogleFonts.roboto(
+            //                                 color: kPrimaryColor,
+            //                                 fontSize: 16,
+            //                                 fontWeight: FontWeight.w600),
+            //                           ),
+            //                         ])));
+            //               }
+            //
+            //               if (index < snapshot.data!.length) {
+            //                 return Container(
+            //                   width: 110,
+            //                   padding: const EdgeInsets.all(12),
+            //                   decoration: BoxDecoration(
+            //                       color: kSecondaryColor,
+            //                       borderRadius: BorderRadius.circular(12)),
+            //                   child: Column(
+            //                     mainAxisAlignment: MainAxisAlignment.center,
+            //                     children: [
+            //                       Text(
+            //                         snapshot.data![index].title!,
+            //                         style: GoogleFonts.roboto(
+            //                             color: kOnSecondaryColor,
+            //                             fontWeight: FontWeight.w600,
+            //                             fontSize: 16),
+            //                       ),
+            //                       Text(
+            //                         snapshot.data![index].link!,textAlign: TextAlign.center,
+            //                         style: GoogleFonts.roboto(
+            //                             color: kOnSecondaryColor,
+            //                             fontWeight: FontWeight.w300,
+            //                             fontSize: 10),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 );
+            //               }
+            //             },
+            //             separatorBuilder: (context, index) {
+            //               return const SizedBox(
+            //                 width: 12,
+            //               );
+            //             },
+            //             itemCount: snapshot.data!.length + 1),
+            //       );
+            //     } else {
+            //       return const Center(
+            //         child: Text('No data'),
+            //       );
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),

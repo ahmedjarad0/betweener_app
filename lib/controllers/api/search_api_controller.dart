@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:betweener_app/controllers/pref/shared_pref.dart';
+import 'package:betweener_app/core/helper/shared_pref.dart';
 import 'package:betweener_app/core/util/constants.dart';
 import 'package:betweener_app/models/user.dart';
 import 'package:http/http.dart' as http;
