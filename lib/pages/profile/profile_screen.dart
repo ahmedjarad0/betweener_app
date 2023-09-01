@@ -12,9 +12,11 @@ import 'package:betweener_app/pages/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/util/constants.dart';
 import '../../models/links.dart';
+import '../../provider/follow_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String id = '/profile_screen';
